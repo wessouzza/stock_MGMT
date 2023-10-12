@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stock_mgmt.stock_mgmt.entity.User;
+import com.stock_mgmt.stock_mgmt.entity.UserMd;
 import com.stock_mgmt.stock_mgmt.services.UserService;
 
 @RestController("/users")
@@ -23,22 +23,22 @@ public class UserController {
     }
 
     @PostMapping
-    List<User> create(@RequestBody User user){
+    List<UserMd> create(@RequestBody UserMd user){
         return userService.create(user);
     }
 
     @GetMapping
-    List<User> list(){
+    List<UserMd> list(){
         return userService.list();
     }
 
     @PutMapping("{id}")
-    List<User> update(@PathVariable UUID id, @RequestBody User user){
+    List<UserMd> update(@PathVariable UUID id, @RequestBody UserMd user){
         return userService.update(id, user);
     }
 
     @DeleteMapping("{id}")
-    List<User> delete(@PathVariable UUID id){
+    List<UserMd> delete(@PathVariable UUID id){
         return userService.delete(id);
     }
 }

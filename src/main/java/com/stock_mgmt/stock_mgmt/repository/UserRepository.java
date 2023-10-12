@@ -4,9 +4,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.stock_mgmt.stock_mgmt.entity.User;
+import com.stock_mgmt.stock_mgmt.entity.UserMd;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<UserMd, UUID> {
     
-    Optional<User> findByName(String username);
+    Optional<UserMd> findByName(String username);
 }

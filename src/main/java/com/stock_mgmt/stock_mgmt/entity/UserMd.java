@@ -1,6 +1,7 @@
 package com.stock_mgmt.stock_mgmt.entity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -10,11 +11,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class UserMd implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,10 +26,16 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
+    @ManyToMany
+    @JoinTable(name = "roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<UserRole> roles;
 
-    public User(){}
 
-    public User(UUID id, String name, String email, String password){
+    public UserMd(){}
+
+    public UserMd(UUID id, String name, String email, String password){
         this.id = id;
         this.name = name;
         this.email = email;
@@ -59,39 +69,38 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
-    }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        throw new UnsupportedOperationException("Unimplemented method 'isAccountNonExpired'");
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        throw new UnsupportedOperationException("Unimplemented method 'isAccountNonLocked'");
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        throw new UnsupportedOperationException("Unimplemented method 'isCredentialsNonExpired'");
-    }
-
-    @Override
-    public boolean isEnabled() {
-        throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
     }
 
     @Override
     public String getUsername() {
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+        return null;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
 }
