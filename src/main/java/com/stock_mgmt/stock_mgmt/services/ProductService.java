@@ -11,14 +11,20 @@ import java.util.List;
 @Service
 public class ProductService {
     
-    private ProductRepository productRepository;
+    final private ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
     public List<Product> create(Product product){
+        Product sku = productRepository.findBySku(product.getSku());
+
+        if(sku != null){
+            throw new ErrorMessge("Sku already exists.");
+        }else{
         productRepository.save(product);
+        }
         return list();
     }
 
