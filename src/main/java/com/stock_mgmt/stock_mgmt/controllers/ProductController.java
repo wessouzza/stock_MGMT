@@ -2,6 +2,9 @@ package com.stock_mgmt.stock_mgmt.controllers;
 
 import java.util.List;
 
+import com.stock_mgmt.stock_mgmt.exception.ErrorMessge;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,18 +17,24 @@ import com.stock_mgmt.stock_mgmt.entity.Product;
 import com.stock_mgmt.stock_mgmt.services.ProductService;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
-    private ProductService productService;
+    final private ProductService productService;
 
     public ProductController(ProductService productService){
         this.productService = productService;
     }
 
+
     @PostMapping
-    List<Product> create(@RequestBody Product product){
-        return productService.create(product);
+    public ResponseEntity<?> create(@RequestBody Product product){
+        try{
+            List<Product> product01 = productService.create(product);
+            return ResponseEntity.ok(product01);
+        }catch (ErrorMessge msg){
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(msg.getMessage());
+        }
     }
 
     @GetMapping
@@ -33,9 +42,34 @@ public class ProductController {
         return productService.list();
     }
 
+    @GetMapping("/findName/{name}")
+    public ResponseEntity<?> getOneByName(@PathVariable String name){
+        try{
+            List<Product> product = productService.getOneByName(name);
+            return ResponseEntity.ok(product);
+        }catch (ErrorMessge msg) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg.getMessage());
+        }
+    }
+
+    @GetMapping("/findSku/{sku}")
+    public ResponseEntity<?> getOneBySku(@PathVariable Long sku){
+        try {
+            Product productSku = productService.getOneBySku(sku);
+            return ResponseEntity.ok(productSku);
+        }catch (ErrorMessge msg){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg.getMessage());
+        }
+    }
+
     @PutMapping("{id}")
-    List<Product> update(@PathVariable Long id, @RequestBody Product product){
-        return productService.update(id, product);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Product product){
+        try {
+            List<Product> product01 = productService.update(id, product);
+            return ResponseEntity.ok(product01);
+        }catch (ErrorMessge msg){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg.getMessage());
+        }
     }
 
     @DeleteMapping("{id}")
